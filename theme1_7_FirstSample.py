@@ -1,4 +1,5 @@
 import pygame
+import os
 from PVector import PVector
 
 
@@ -6,8 +7,10 @@ def map_range(value: float, in_min: float, in_max: float, out_min: float, out_ma
     return out_min + (((value - in_min) / (in_max - in_min)) * (out_max - out_min))
 
 
-def screen_setup(width, height):
+def screen_setup(width, height, title=None):
     pygame.init()
+    if title is not None:
+        pygame.display.set_caption(title)
     return pygame.display.set_mode((width, height))
 
 
@@ -30,7 +33,7 @@ def theme1_7_first_sample():
     height = 512
 
     # screen_setup
-    screen = screen_setup(width, height)
+    screen = screen_setup(width, height, os.path.basename(__file__))
     background_color = pygame.Color(0, 0, 255)
     ball_color = pygame.Color(255, 0, 0)
 
