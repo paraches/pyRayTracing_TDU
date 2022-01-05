@@ -27,7 +27,7 @@ def theme2_1_diffuse_only():
     # loop
     for y in range(height):
         for x in range(width):
-            pw = PVector(map_range(x, 0, width - 1, -1, 1), map_range(y, 0, height - 1, -1, 1), 0)
+            pw = PVector(map_range(x, 0, width - 1, -1, 1), map_range(y, 0, height - 1, 1, -1), 0)
             de = pw.sub(pe)
 
             # chapter 3
