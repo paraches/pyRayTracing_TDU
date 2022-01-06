@@ -44,6 +44,9 @@ class PVector:
     def copy(self):
         return PVector(self.x, self.y, self.z)
 
+    def reverse(self):
+        return PVector(-self.x, -self.y, -self.z)
+
     @classmethod
     def sigma(cls, *args):
         result = PVector(0, 0, 0)
