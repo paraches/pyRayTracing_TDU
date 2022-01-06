@@ -9,6 +9,10 @@ def map_range(value: float, in_min: float, in_max: float, out_min: float, out_ma
     return out_min + (((value - in_min) / (in_max - in_min)) * (out_max - out_min))
 
 
+def constrain(value: float, min_value: float = 0.0, max_value: float = 1.0):
+    return min(max_value, max(min_value, value))
+
+
 def theme2_2_simple_shading():
     # screen size
     width = 512
@@ -67,9 +71,16 @@ def theme2_2_simple_shading():
                 if t > 0:
                     # Chapter 5
                     # summary of reflection
-                    # diffuse reflection
                     #
-                    # Rr = Rd
+                    # Rr = Ra + Rd + Rs
+
+                    #
+                    # ambient reflection
+                    # Ra = kaIa
+                    ra = ka * ia
+
+                    #
+                    # diffuse reflection
                     # Rd = kdIi(n dot l), |n| = 1, |l| = 1 (normalize)
                     # kd = 1.0, Ii = 1.0
                     # Rd = (n dot l)
@@ -79,21 +90,25 @@ def theme2_2_simple_shading():
                     n = pi.sub(pc).normalize()
                     l = pl.sub(pi).normalize()
                     nl = n.dot(l)
-                    if nl < 0:
-                        nl = 0
-                    color = pygame.Color((255 * nl, 255 * nl, 255 * nl))
+                    nl = constrain(nl)
+                    rd = kd * ii * nl
 
-                    # Chapter 5
-                    # summary of reflection
-                    # diffuse reflection
                     #
+                    # specular  reflection
                     # Rs = ksIi(v dot r) ** alpha
-                    # Rd = kdIi(n dot l), |n| = 1, |l| = 1 (normalize)
-                    # kd = 1.0, Ii = 1.0
-                    # Rd = (n dot l)
-                    # n = pi - pc,  pi = pe + tde
-                    # l = pl - pi
+                    # v = -d, |v| = 1
+                    v = de.reverse().normalize()
+                    # r = 2(n dot l)n - l
+                    # r = 2(nl)n - l, |r| = 1
+                    r_vector = n.mult(2 * nl).sub(l).normalize()
+                    vr = v.dot(r_vector)
+                    vr = constrain(vr)
+                    rs = ks * ii * (vr ** alpha)
+                    rs = constrain(rs)
 
+                    rr = constrain(ra + rd + rs)
+
+                    color = pygame.Color((rr * 255, rr * 255, rr * 255))
                 else:
                     color = background_color
 
