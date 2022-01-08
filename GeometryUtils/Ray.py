@@ -1,4 +1,4 @@
-from PVector import PVector
+from .PVector import PVector
 
 
 class Ray:
