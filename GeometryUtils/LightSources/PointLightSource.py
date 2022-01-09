@@ -1,4 +1,4 @@
-from LightSource import LightSource
+from .LightSource import LightSource
 from ..PVector import PVector
 from ..FColor import FColor
 from ..Lighting import Lighting

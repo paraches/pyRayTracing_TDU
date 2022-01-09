@@ -1,5 +1,5 @@
-from PVector import PVector
-from FColor import FColor
+from .PVector import PVector
+from .FColor import FColor
 
 
 class Lighting:
