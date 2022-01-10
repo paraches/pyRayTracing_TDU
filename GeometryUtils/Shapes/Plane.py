@@ -1,7 +1,7 @@
 from ..PVector import PVector
 from ..Ray import Ray
 from ..IntersectionPoint import IntersectionPoint
-from Shape import Shape
+from .Shape import Shape
 
 
 class Plane(Shape):
