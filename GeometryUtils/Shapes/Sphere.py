@@ -2,11 +2,14 @@ from ..PVector import PVector
 from ..Ray import Ray
 from .Shape import Shape
 from ..IntersectionPoint import IntersectionPoint
+from ..Material import Material
 import math
 
 
 class Sphere(Shape):
-    def __init__(self, center=PVector(), radius: float = 1.0):
+    def __init__(self, center=PVector(), radius: float = 1.0, material=Material()):
+        super(Shape, self).__init__()
+        self.material = material
         self.center = center.copy()
         self.radius = radius
 

@@ -1,11 +1,14 @@
 from ..PVector import PVector
 from ..Ray import Ray
 from ..IntersectionPoint import IntersectionPoint
+from ..Material import Material
 from .Shape import Shape
 
 
 class Plane(Shape):
-    def __init__(self, normal=PVector(0, 1, 0), position=PVector(0)):
+    def __init__(self, normal=PVector(0, 1, 0), position=PVector(0), material=Material()):
+        super(Shape, self).__init__()
+        self.material = material
         self.normal = normal.copy().normalize()
         self.position = position.copy()
 
