@@ -142,15 +142,18 @@ def ray_trace_recursive(scene: Scene, ray: Ray, recursion_level: int) -> FColor 
         dfe = i.mult(h1 / h2).sub(n.mult(h1 / h2 * o))
         rfe = Ray((nearest_intersection.position.add(dfe.mult(C_EPSILON))), dfe)
 
+        # kf
+        kf = nearest_shape.material.catadioptric_factor
+
         # kf cr Rfe
         reflection_value = ray_trace_recursive(scene, rre, recursion_level + 1)
         if reflection_value is not None:
-            refraction_color += reflection_value.mult(1.0 * cr)
+            refraction_color += kf * reflection_value.mult(cr)
 
         # kf ct Rfe
         refraction_value = ray_trace_recursive(scene, rfe, recursion_level + 1)
         if refraction_value is not None:
-            refraction_color += refraction_value.mult(1.0 * ct)
+            refraction_color += kf * refraction_value.mult(ct)
 
         rr = rr + refraction_color
 
@@ -174,7 +177,7 @@ def theme3_3_full_ray_tracing():
     # shapes
     shapes = [
         Sphere(PVector(-0.4, -0.65, 3), 0.35, Material(FColor(), FColor(), FColor(), 0, True, FColor(1.0))),
-        Sphere(PVector(0.5, -0.65, 2), 0.35, Material(FColor(), FColor(), FColor(), 0, False, FColor(), True, 1.51)),
+        Sphere(PVector(0.5, -0.65, 2), 0.35, Material(FColor(), FColor(), FColor(), 0, False, FColor(1.0), True, 1.51)),
         Plane(PVector(0, 1, 0), PVector(0, -1, 0), Material(FColor(), FColor(0.69), FColor(), 0)),
         Plane(PVector(0, -1, 0), PVector(0, 1, 0), Material(FColor(), FColor(0.69), FColor(), 0)),
         Plane(PVector(-1, 0, 0), PVector(1, 0, 0), Material(FColor(), FColor(0, 0.69, 0), FColor(), 0)),
