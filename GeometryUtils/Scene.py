@@ -4,10 +4,11 @@ from .Ray import Ray
 
 
 class Scene:
-    def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01)):
+    def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01), global_refraction_index=1.000293):
         self.shapes = shapes
         self.light_sources = light_sources
         self.ambient_intensity = ambient_intensity
+        self.global_refraction_index = global_refraction_index
 
     def test_intersection_with_all(self, ray: Ray, max_dist: float = sys.float_info.max, exit_once_found: bool = False):
         nearest_shape = None
