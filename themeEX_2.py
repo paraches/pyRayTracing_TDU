@@ -11,7 +11,7 @@ from GeometryUtils.Shapes.Sphere import Sphere
 from GeometryUtils.Shapes.Plane import Plane
 from GeometryUtils.GeometryUtil import map_range, constrain, C_EPSILON
 from GeometryUtils.Material import Material
-from GeometryUtils.Scene import Scene
+from GeometryUtils.Scene import Scene, Camera
 
 
 MAX_RECURSION = 8
@@ -194,15 +194,16 @@ def theme_ex_2():
     # ambient light source
     i_ambient = FColor(0.1)
 
-    scene = Scene(shapes, lights, i_ambient, 1.0)
+    scene = Scene(shapes, lights, i_ambient, 1.0, Camera(PVector(10, 10, -10), PVector(1, 0, 15), 3))
+#    scene = Scene(shapes, lights, i_ambient, 1.0, Camera())
 
     # loop
     for y in range(height):
         for x in range(width):
-            pw = PVector(map_range(x, 0, width - 1, -1, 1), map_range(y, 0, height - 1, 1, -1), 0)
+            pw = scene.world_from_screen_coordinate(x, y)
 
             # eye
-            eye_ray = Ray(pe, pw.sub(pe))
+            eye_ray = Ray(scene.camera.position, pw.sub(scene.camera.position))
 
             # find the nearest shape and intersection
             reflection = ray_trace(scene, eye_ray)
