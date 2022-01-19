@@ -1,14 +1,24 @@
 import sys
 from .FColor import FColor
 from .Ray import Ray
+from .PVector import PVector
+
+
+class Camera:
+    def __init__(self, position=PVector(0, 0, -5), look_at=PVector(), screen_distance: float = 5):
+        self.position = position
+        self.look_at = look_at
+        self.screen_distance = screen_distance
 
 
 class Scene:
-    def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01), global_refraction_index=1.000293):
+    def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01), global_refraction_index=1.000293,
+                 camera=Camera()):
         self.shapes = shapes
         self.light_sources = light_sources
         self.ambient_intensity = ambient_intensity
         self.global_refraction_index = global_refraction_index
+        self.camera = camera
 
     def test_intersection_with_all(self, ray: Ray, max_dist: float = sys.float_info.max, exit_once_found: bool = False):
         nearest_shape = None
