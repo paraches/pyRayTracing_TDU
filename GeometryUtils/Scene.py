@@ -13,12 +13,14 @@ class Camera:
 
 class Scene:
     def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01), global_refraction_index=1.000293,
-                 camera=Camera()):
+                 camera=Camera(), width: int = 512, height: int = 512):
         self.shapes = shapes
         self.light_sources = light_sources
         self.ambient_intensity = ambient_intensity
         self.global_refraction_index = global_refraction_index
         self.camera = camera
+        self.width = width
+        self.height = height
 
         # EX-2
         # df = pt - pe, normalize
@@ -29,6 +31,11 @@ class Scene:
         self.dy = df.cross(self.dx)
         # pm = pe +mdf
         self.pm = self.camera.position.add(df.mult(self.camera.screen_distance))
+
+        # EX-3
+        self.screen_width = 2.0
+        self.ws = self.screen_width if width >= height else self.screen_width * width / height
+        self.hs = self.screen_width * height / width if width > height else self.screen_width
 
     def test_intersection_with_all(self, ray: Ray, max_dist: float = sys.float_info.max, exit_once_found: bool = False):
         nearest_shape = None
@@ -47,10 +54,10 @@ class Scene:
 
     # pw = pe + mdf + fxdx + fydy
     def world_from_screen_coordinate(self, x: int, y: int):
-        # fx = 2xs / (W - 1) - 1.0
-        fx = (2 * float(x)) / (512 - 1) - 1.0
-        # fy = -2yx / (H - 1) + 1.0
-        fy = (-2 * float(y)) / (512 - 1) + 1.0
+        # fx = Wsxs / (W - 1) - Ws / 2
+        fx = (self.ws * float(x)) / (self.width - 1) - (self.ws / self.screen_width)
+        # fy = -Hsys / (H - 1) + Hs / 2
+        fy = -(self.hs * float(y)) / (self.height - 1) + (self.hs / self.screen_width)
         fxdx = self.dx.mult(fx)
         fxdy = self.dy.mult(fy)
         # pw = pm + fxdx + fydy
