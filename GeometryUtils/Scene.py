@@ -12,8 +12,12 @@ class Camera:
         self.radian = view_angle / 180 * math.pi
 
 
+GLOBAL_REFRACTION_INDEX = 1.000293
+
+
 class Scene:
-    def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01), global_refraction_index=1.000293,
+    def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01),
+                 global_refraction_index=GLOBAL_REFRACTION_INDEX,
                  camera=Camera(), width: int = 512, height: int = 512):
         self.shapes = shapes
         self.light_sources = light_sources
