@@ -15,6 +15,23 @@ class Cone(Shape):
         self.material = material
 
     def test_intersection(self, ray: Ray):
+        #   EX-4-EX
+        #
+        #   bottom normal = (0, -1, 0)
+        bottom_normal = PVector(0, -1, 0)
+        #   test intersection with ray and bottom
+        dn_dot = ray.direction.dot(bottom_normal)
+        bottom_intersection_point = None
+        if dn_dot != 0:
+            t = (self.center.dot(bottom_normal) - ray.start.dot(bottom_normal)) / dn_dot
+            if t > 0:
+                bottom_position = ray.get_point(t)
+                if bottom_position.sub(self.center).mag() <= self.radius:
+                    bottom_distance = t * ray.direction.mag()
+                    bottom_intersection_point = IntersectionPoint(bottom_distance, bottom_position, bottom_normal)
+
+        #   test intersection with ray and cone
+        #
         #   bottom center pc = (cx, cy, cz)
         #   radius r
         #   height h
@@ -52,7 +69,7 @@ class Cone(Shape):
         d = b * b - 4 * a * c
 
         if d < 0:
-            return None
+            return bottom_intersection_point
 
         if d == 0:
             t = float(-b / (2 * a))
@@ -62,14 +79,16 @@ class Cone(Shape):
             t = min(t_plus, t_minus) if t_plus > 0 and t_minus > 0 else max(t_plus, t_minus)
 
         if t <= 0:
-            return None
+            return bottom_intersection_point
 
         distance = t * ray.direction.mag()
+        if bottom_intersection_point is not None and distance > bottom_intersection_point.distance:
+            return bottom_intersection_point
         position = ray.start.add(ray.direction.mult(t))
         # check distance between position and self.center is in range [-h, 0]
         far = self.center.y - position.y
         if far < -self.height or far > 0:
-            return None
+            return bottom_intersection_point
         # calc normal
         nx = 2 * (position.x - self.center.x)
         ny = -2 * (self.radius / self.height) ** 2 * (position.y - self.center.y - self.height)
