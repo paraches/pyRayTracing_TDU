@@ -193,7 +193,7 @@ def theme_ex_5():
 
     camera = Camera(PVector(0, 0, -5), PVector(), 23)
     from GeometryUtils.Scene import GLOBAL_REFRACTION_INDEX
-    scene = Scene(shapes, lights, i_ambient, 1.0, camera, width, height)
+    scene = Scene(shapes, lights, i_ambient, GLOBAL_REFRACTION_INDEX, camera, width, height)
 
     # loop
     for y in range(height):
