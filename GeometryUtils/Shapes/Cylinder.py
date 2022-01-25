@@ -14,6 +14,21 @@ class Cylinder(Shape):
         self.height = height
 
     def test_intersection(self, ray: Ray):
+        # EX-5-EX
+        bottom_normal = PVector(0, -1, 0)
+        #   test intersection with ray and bottom
+        dn_dot = ray.direction.dot(bottom_normal)
+        bottom_intersection_point = None
+        if dn_dot != 0:
+            bottom_center = self.center.sub(PVector(0, self.height / 2, 0))
+            t = (bottom_center.dot(bottom_normal) - ray.start.dot(bottom_normal)) / dn_dot
+            if t > 0:
+                bottom_position = ray.get_point(t)
+                if bottom_position.sub(bottom_center).mag() <= self.radius:
+                    bottom_distance = t * ray.direction.mag()
+                    bottom_intersection_point = IntersectionPoint(bottom_distance, bottom_position, bottom_normal)
+                    return bottom_intersection_point
+
         # |(p - pc)M|^2 = r^2
         # M = |1 0 0|
         #     |0 0 0|
