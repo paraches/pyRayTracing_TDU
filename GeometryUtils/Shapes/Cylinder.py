@@ -13,12 +13,26 @@ class Cylinder(Shape):
         self.radius = radius
         self.height = height
 
+    def test_plane_intersection(self, ray: Ray, normal: PVector):
+        dn_dot = ray.direction.dot(normal)
+        intersection_point = None
+        if dn_dot != 0:
+            center = self.center.add(normal.mult(self.height / 2))
+            t = (center.dot(normal) - ray.start.dot(normal)) / dn_dot
+            if t > 0:
+                position = ray.get_point(t)
+                if position.sub(center).mag() <= self.radius:
+                    distance = t * ray.direction.mag()
+                    intersection_point = IntersectionPoint(distance, position, normal)
+
+        return intersection_point
+
     def test_intersection(self, ray: Ray):
         # EX-5-EX
         bottom_normal = PVector(0, -1, 0)
         #   test intersection with ray and bottom
         dn_dot = ray.direction.dot(bottom_normal)
-        bottom_intersection_point = None
+        intersection_point = None
         if dn_dot != 0:
             bottom_center = self.center.sub(PVector(0, self.height / 2, 0))
             t = (bottom_center.dot(bottom_normal) - ray.start.dot(bottom_normal)) / dn_dot
@@ -26,8 +40,15 @@ class Cylinder(Shape):
                 bottom_position = ray.get_point(t)
                 if bottom_position.sub(bottom_center).mag() <= self.radius:
                     bottom_distance = t * ray.direction.mag()
-                    bottom_intersection_point = IntersectionPoint(bottom_distance, bottom_position, bottom_normal)
-                    return bottom_intersection_point
+                    intersection_point = IntersectionPoint(bottom_distance, bottom_position, bottom_normal)
+
+        top_intersection_point = self.test_plane_intersection(ray, PVector(0, 1, 0))
+        if top_intersection_point is not None:
+            if intersection_point is None:
+                intersection_point = top_intersection_point
+            else:
+                if intersection_point.distance > top_intersection_point.distance:
+                    intersection_point = top_intersection_point
 
         # |(p - pc)M|^2 = r^2
         # M = |1 0 0|
@@ -69,6 +90,8 @@ class Cylinder(Shape):
                 ny = 0
                 nz = 2 * (position.z - self.center.z)
                 normal = PVector(nx, ny, nz).normalize()
-                return IntersectionPoint(distance, position, normal)
+                body_intersection_point = IntersectionPoint(distance, position, normal)
+                if intersection_point is None or body_intersection_point.distance < intersection_point.distance:
+                    intersection_point = body_intersection_point
 
-        return None
+        return intersection_point
