@@ -173,9 +173,9 @@ def theme_ex_5_ex():
 
     # shapes
     shapes = [
-#        Cylinder(PVector(3, 0, 25), 1, 2, Material(FColor(0.01), FColor(0.69, 0, 0), FColor(0.30), 8.0)),
-#        Cylinder(PVector(2, 0, 20), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0), FColor(0.30), 8.0)),
-#        Cylinder(PVector(1, 0, 15), 1, 2, Material(FColor(0.01), FColor(0, 0, 0.69), FColor(0.30), 8.0)),
+        Cylinder(PVector(3, 0, 25), 1, 2, Material(FColor(0.01), FColor(0.69, 0, 0), FColor(0.30), 8.0)),
+        Cylinder(PVector(2, 0, 20), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0), FColor(0.30), 8.0)),
+        Cylinder(PVector(1, 0, 15), 1, 2, Material(FColor(0.01), FColor(0, 0, 0.69), FColor(0.30), 8.0)),
         Cylinder(PVector(0, -1.5, 10), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0.69), FColor(0.30), 8.0)),
         Cylinder(PVector(-1, 1.8, 5), 1, 2, Material(FColor(0.01), FColor(0.69, 0, 0.69), FColor(0.30), 8.0)),
         Plane(PVector(0, 1, 0), PVector(0, -1, 0), Material(FColor(0.01), FColor(0.69), FColor(0.30), 8.0))
@@ -186,6 +186,7 @@ def theme_ex_5_ex():
         PointLightSource(PVector(-5, 5, -5), FColor(0.5)),
         PointLightSource(PVector(5, 0, -5), FColor(0.5)),
         PointLightSource(PVector(5, 20, -5), FColor(0.5)),
+        PointLightSource(PVector(-1, 0.1, 5), FColor(0.5))
     ]
 
     # ambient light source
