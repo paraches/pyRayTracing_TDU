@@ -18,7 +18,8 @@ GLOBAL_REFRACTION_INDEX = 1.000293
 class Scene:
     def __init__(self, shapes, light_sources, ambient_intensity=FColor(0.01),
                  global_refraction_index=GLOBAL_REFRACTION_INDEX,
-                 camera=Camera(), width: int = 512, height: int = 512):
+                 camera=Camera(), width: int = 512, height: int = 512,
+                 use_fog=False, fog=None):
         self.shapes = shapes
         self.light_sources = light_sources
         self.ambient_intensity = ambient_intensity
@@ -27,6 +28,8 @@ class Scene:
         self.width = width
         self.height = height
         self.screen_width = 2.0
+        self.use_fog = use_fog
+        self.fog = fog
 
         # EX-2
         # df = pt - pe, normalize
