@@ -56,16 +56,23 @@ def ray_trace_recursive(scene: Scene, ray: Ray, recursion_level: int) -> FColor 
         #       Rt  (when |n dot de| > q
         # Rr -> edge color
         # q  -> edge thickness
+        nl = nearest_intersection.normal.dot(lighting.direction)
+        nl = constrain(nl)
+        nl_original = nl
+
         if nearest_shape.material.toon:
-            edge_nl = nearest_intersection.normal.dot(ray.direction.normalize())
+            edge_nl = nearest_intersection.normal.dot(ray.direction.normalize())    #enDot
             if abs(edge_nl) < nearest_shape.material.toon.edge_thickness:
                 rr = nearest_shape.material.toon.edge_color
                 break
+            # A' = 1/Nt [Nt(1 - 2/pi acos A)]
+            # A = nl
+            nt = nearest_shape.material.toon.level
+            nl = 1 / nt * math.ceil(nt * (1 - 2 / math.pi * math.acos(nl)))
 
         # diffuse reflection
         # Rd = kdIi(nv dot lv), |nv| = 1, |lv| = 1
-        nl = nearest_intersection.normal.dot(lighting.direction)
-        nl = constrain(nl)
+#        nl = nearest_intersection.normal.dot(lighting.direction)
         rd = (nearest_shape.material.diffuse_factor * lighting.intensity).mult(nl)
 
         # specular reflection
@@ -73,11 +80,16 @@ def ray_trace_recursive(scene: Scene, ray: Ray, recursion_level: int) -> FColor 
         # rv = 2(nv dot lv)nv - lv
         # |nv| = 1, |lv| = 1, |vv| = 1, |rv| = 1
         rs = FColor(0.0)
-        if nl > 0:
-            rv = nearest_intersection.normal.mult(2 * nl).sub(lighting.direction).normalize()
+        if nl_original > 0:
+            rv = nearest_intersection.normal.mult(2 * nl_original).sub(lighting.direction).normalize()
             vv = ray.direction.reverse().normalize()
             vr = vv.dot(rv)
             vr = constrain(vr)
+            # A' = 1/Nt [Nt(1 - 2/pi acos A)]
+            # A = vr
+            if nearest_shape.material.toon:
+                nt = nearest_shape.material.toon.level
+                vr = 1 / nt * math.ceil(nt * (1 - 2 / math.pi * math.acos(vr)))
             rs = (nearest_shape.material.specular_factor * lighting.intensity).mult(
                 vr ** nearest_shape.material.shininess)
 
@@ -201,13 +213,14 @@ def theme_ex_7():
 
     # shapes
     sphere_toon = Toon()
+    plane_toon = Toon(edge_thickness=0.005)
     shapes = [
         Sphere(PVector(3, 0, 25), 1, Material(FColor(0.01), FColor(0.69, 0, 0), FColor(0.30), 8.0, toon=sphere_toon)),
         Sphere(PVector(2, 0, 20), 1, Material(FColor(0.01), FColor(0, 0.69, 0), FColor(0.30), 8.0, toon=sphere_toon)),
         Sphere(PVector(1, 0, 15), 1, Material(FColor(0.01), FColor(0, 0, 0.69), FColor(0.30), 8.0, toon=sphere_toon)),
         Sphere(PVector(0, 0, 10), 1, Material(FColor(0.01), FColor(0, 0.69, 0.69), FColor(0.30), 8.0, toon=sphere_toon)),
         Sphere(PVector(-1, 0, 5), 1, Material(FColor(0.01), FColor(0.69, 0, 0.69), FColor(0.30), 8.0, toon=sphere_toon)),
-        Plane(PVector(0, 1, 0), PVector(0, -1, 0), Material(FColor(0.01), FColor(0.69), FColor(0.30), 8.0))
+        Plane(PVector(0, 1, 0), PVector(0, -1, 0), Material(FColor(0.01), FColor(0.69), FColor(0.30), 8.0, toon=plane_toon))
     ]
 
     # light sources
