@@ -2,6 +2,7 @@ import math
 import os
 
 import pygame
+import timeit
 from PGScreen import screen_setup, key_loop
 from GeometryUtils.PVector import PVector
 from GeometryUtils.FColor import FColor
@@ -215,9 +216,11 @@ def theme3_3_full_ray_tracing():
     # update screen
     pygame.display.flip()
 
-    # wait esc key
-    key_loop()
-
 
 if __name__ == '__main__':
-    theme3_3_full_ray_tracing()
+    loop = 5
+    result = timeit.timeit('theme3_3_full_ray_tracing()', globals=globals(), number=loop)
+    print(f'avg: {result / loop} sec')  # avg: 34.908716214995366 sec
+
+    # wait esc key
+    key_loop()
