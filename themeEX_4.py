@@ -8,6 +8,7 @@ from GeometryUtils.FColor import FColor
 from GeometryUtils.Ray import Ray
 from GeometryUtils.LightSources.PointLightSource import PointLightSource
 from GeometryUtils.Shapes.Cone import Cone
+from GeometryUtils.Shapes.Sphere import Sphere
 from GeometryUtils.Shapes.Plane import Plane
 from GeometryUtils.GeometryUtil import map_range, constrain, C_EPSILON
 from GeometryUtils.Material import Material
@@ -173,25 +174,25 @@ def theme_ex_4():
 
     # shapes
     shapes = [
-        Cone(PVector(3, -1, 25), 1, 2, Material(FColor(0.01), FColor(0.69, 0, 0), FColor(0.30), 8.0)),
-        Cone(PVector(2, -1, 20), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0), FColor(0.30), 8.0)),
-        Cone(PVector(1, -1, 15), 1, 2, Material(FColor(0.01), FColor(0, 0, 0.69), FColor(0.30), 8.0)),
-        Cone(PVector(0, -1, 10), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0.69), FColor(0.30), 8.0)),
-        Cone(PVector(-1, -1, 5), 1, 2, Material(FColor(0.01), FColor(0.69, 0, 0.69), FColor(0.30), 8.0)),
+#        Cone(PVector(3, -1, 25), 1, 2, Material(FColor(0.01), FColor(0.69, 0, 0), FColor(0.30), 8.0)),
+#        Cone(PVector(2, -1, 20), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0), FColor(0.30), 8.0)),
+#        Cone(PVector(1, -1, 15), 1, 2, Material(FColor(0.01), FColor(0, 0, 0.69), FColor(0.30), 8.0)),
+#        Cone(PVector(0, -1, 10), 1, 2, Material(FColor(0.01), FColor(0, 0.69, 0.69), FColor(0.30), 8.0)),
+        Sphere(PVector(-1, 0, 5), 1, Material(FColor(0.01), FColor(0.69, 0.69, 0.69), FColor(0.30), 8.0)),
         Plane(PVector(0, 1, 0), PVector(0, -1, 0), Material(FColor(0.01), FColor(0.69), FColor(0.30), 8.0))
     ]
 
     # light sources
     lights = [
-        PointLightSource(PVector(-5, 5, -5), FColor(0.5)),
+#        PointLightSource(PVector(-5, 5, -5), FColor(0.5)),
         PointLightSource(PVector(5, 0, -5), FColor(0.5)),
-        PointLightSource(PVector(5, 20, -5), FColor(0.5)),
+#        PointLightSource(PVector(5, 20, -5), FColor(0.5)),
     ]
 
     # ambient light source
     i_ambient = FColor(0.1)
 
-    camera = Camera(PVector(0, 0, -5), PVector(), 23)
+    camera = Camera(PVector(0, 0, -5), PVector(), 30)
     from GeometryUtils.Scene import GLOBAL_REFRACTION_INDEX
     scene = Scene(shapes, lights, i_ambient, GLOBAL_REFRACTION_INDEX, camera, width, height)
 
@@ -203,8 +204,13 @@ def theme_ex_4():
             # eye
             eye_ray = Ray(scene.camera.position, pw.sub(scene.camera.position))
 
+            if y == 210 and x == 160:
+                print('come')
             # find the nearest shape and intersection
             reflection = ray_trace(scene, eye_ray)
+
+            if y == 511 and x == 0:
+                print(f'eye_ray: {eye_ray}\nreflection: {reflection}')
 
             if reflection is None:
                 color = background_color

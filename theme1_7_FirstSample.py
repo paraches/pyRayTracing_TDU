@@ -1,6 +1,6 @@
 import pygame
 import os
-from PVector import PVector
+from GeometryUtils.PVector import PVector
 
 
 def map_range(value: float, in_min: float, in_max: float, out_min: float, out_max: float):

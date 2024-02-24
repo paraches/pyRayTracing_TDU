@@ -1,5 +1,5 @@
 from unittest import TestCase
-from PVector import PVector
+from GeometryUtils.PVector import PVector
 
 
 class TestPVector(TestCase):
